@@ -1,0 +1,357 @@
+{-# START_FILE LICENSE #-}
+The MIT License (MIT)
+
+Copyright (c) {{copyright}}
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+{-# START_FILE README.md #-}
+# {{name}}
+
+{-# START_FILE ChangeLog.md #-}
+# ChangeLog for {{name}}
+
+## Unreleased changes
+
+{-# START_FILE package.yaml #-}
+name:               {{name}}
+version:            0.1.0.0
+license:            MIT
+author:              {{author-name}}{{^author-name}}Author name here{{/author-name}}
+maintainer:          {{author-email}}{{^author-email}}example@example.com{{/author-email}}
+copyright:           {{copyright}}{{^copyright}}{{year}}{{^year}}2026{{/year}} {{author-name}}{{^author-name}}Author name here{{/author-name}}{{/copyright}}
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+description:         Please see the README.md
+
+dependencies:
+- base >= 4.7 && < 5
+- adjunctions
+- array
+- attoparsec
+- bifunctors
+- binary
+- bitvec
+- bytestring
+- comonad
+- containers
+- contravariant
+- deepseq
+- directory
+- distributive
+- exceptions
+- extra
+- fgl
+- filepath
+- flow
+- free
+- ghc-bignum
+- ghc-boot-th
+- ghc-prim
+- hashable
+- heaps
+- hmatrix
+- hmatrix-gsl
+- hmatrix-special
+- indexed-traversable
+- indexed-traversable-instances
+- integer-gmp
+- integer-logarithms
+- kan-extensions
+- lens
+- linear-base
+- list-t
+- massiv
+- megaparsec
+- monad-memo
+- mono-traversable
+- mtl
+- mutable-containers
+- mwc-random
+- parallel
+- parsec
+- parser-combinators
+- pretty
+- primitive
+- process
+- profunctors
+- psqueues
+- random
+- reflection
+- regex-tdfa
+- safe-exceptions
+- scientific
+- semialign
+- semigroupoids
+- split
+- stm
+- strict
+- strict-lens
+- tagged
+- template-haskell
+- text
+- tf-random
+- these
+- these-lens
+- time
+- transformers
+- trifecta
+- unboxing-vector
+- unix
+- unordered-containers
+- utility-ht
+- vector
+- vector-algorithms
+- vector-split
+- vector-stream
+- vector-th-unbox
+- wide-word
+- witherable
+- xhtml
+
+language: GHC2021
+
+default-extensions:
+- CPP
+- ImplicitParams
+- LambdaCase
+- LexicalNegation
+- NPlusKPatterns
+- OverloadedStrings
+- DataKinds
+- NoStarIsType
+- TypeFamilyDependencies
+- UndecidableInstances
+
+ghc-options:
+- -Wall
+
+library:
+    source-dirs: []
+
+executables:
+  {{name}}:
+    main:                Main.hs
+    source-dirs:         app
+    dependencies:
+    - {{name}}
+
+{-# START_FILE Setup.hs #-}
+import Distribution.Simple
+main = defaultMain
+
+{-# START_FILE .ghci #-}
+:set -XCPP
+:set -XGHC2021 -XLambdaCase -XNPlusKPatterns -XOverloadedStrings -XLexicalNegation
+:set -XDataKinds -XNoStarIsType -XTypeFamilyDependencies -XUndecidableInstances
+
+{-# START_FILE stack.yaml.atcoder #-}
+snapshot: lts-23.28
+
+packages:
+- .
+
+extra-deps:
+- ac-library-hs-1.5.3.1
+
+{-# START_FILE app/Main.hs #-}
+{-# LANGUAGE CPP #-}
+{-# LANGUAGE GHC2021 #-}
+{-# LANGUAGE ImplicitParams #-}
+{-# LANGUAGE LexicalNegation #-}
+{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE NPlusKPatterns #-}
+{-# LANGUAGE DataKinds, NoStarIsType, TypeFamilyDependencies, UndecidableInstances #-}
+{-# LANGUAGE OverloadedStrings #-}
+module Main 
+    ( main
+    ) where
+
+import Data.ByteString.Char8 qualified as B
+import Data.Maybe
+
+import Debug.Trace qualified as Debug
+
+{- $setup
+>>> :set -XOverloadedStrings
+-}
+_debug :: Bool
+_debug = () /= ()
+
+type I = Int
+type O = Int
+
+type Dom   = ()
+type Codom = ()
+
+type Solver = Dom -> Codom
+
+solve :: Solver
+solve = \ case
+    () -> ()
+
+decode :: [[I]] -> Dom
+decode = \ case
+    _:_ -> ()
+    _   -> _invalid $ "decode: " ++ show @Int __LINE__
+
+encode :: Codom -> [[O]]
+encode = \ case
+    _rr -> [[]]
+
+main :: IO ()
+main = B.interact (detokenize . encode . solve . decode . entokenize)
+
+entokenize :: AsToken a => B.ByteString -> [[a]]
+entokenize = map (map toToken . B.words) . B.lines
+
+detokenize :: AsToken a => [[a]] -> B.ByteString
+detokenize = B.unlines . map (B.unwords . map fromToken)
+
+class AsToken a where
+    toToken :: B.ByteString -> a
+    fromToken :: a -> B.ByteString
+    
+instance AsToken B.ByteString where
+    toToken :: B.ByteString -> B.ByteString
+    toToken = id
+    fromToken :: B.ByteString -> B.ByteString
+    fromToken = id
+
+instance AsToken Int where
+    toToken :: B.ByteString -> Int
+    toToken = fst . fromJust . B.readInt
+    fromToken :: Int -> B.ByteString
+    fromToken = B.pack . show
+
+instance AsToken Integer where
+    toToken :: B.ByteString -> Integer
+    toToken = fst . fromJust . B.readInteger
+    fromToken :: Integer -> B.ByteString
+    fromToken = B.pack . show
+
+instance AsToken String where
+    toToken :: B.ByteString -> String
+    toToken = B.unpack
+    fromToken :: String -> B.ByteString
+    fromToken = B.pack
+
+instance AsToken Double where
+    toToken :: B.ByteString -> Double
+    toToken = read . B.unpack
+    fromToken :: Double -> B.ByteString
+    fromToken = B.pack . show
+
+{- debug -}
+_trace :: String -> a -> a
+_trace | _debug    = Debug.trace
+       | otherwise = const id
+
+_tracing :: Show a => a -> a
+_tracing = _trace . show <*> id
+
+{- error -}
+_impossible :: String -> a
+_impossible msg = error $ msg ++ ": impossible"
+
+_invalid :: String -> a
+_invalid msg = error $ msg ++ ": invalid input"
+
+{- Start of Bonsai -}
+
+{- End of Bonsai -}
+{- Kluges -}
+
+{- End of Kluges -}
+
+{-# START_FILE activate #-}
+#!/bin/bash
+chmod u+x building checking executing ghcing initializing resetting setting submitting
+
+ghcup set hls 2.14.0.0
+ghcup set ghc 9.8.4
+        
+cp stack.yaml.atcoder stack.yaml
+
+cp $HOME/.config/atcoder-cli-nodejs/haskell/Main.hs app/Main.hs
+
+stack build
+
+acc config default-task-choice all
+
+{-# START_FILE initializing #-}
+#!/bin/bash
+
+acc new {{name}}
+mv {{name}}/contest.acc.json ./
+
+jq -r '.tasks[].directory.path' ./contest.acc.json | while read tid; do
+  mv {{name}}/${tid} app/
+  ./setting ${tid}
+done
+
+rmdir {{name}}
+cp contest.acc.json app/
+ln -s ./app ./{{name}}
+
+./resetting a
+
+{-# START_FILE setting #-}
+#!/bin/bash
+
+add-entry $1
+
+echo "export CURRENT_STACK_EXE_ENTRY=$1" > .curname
+
+source .curname
+./building
+
+if type "gen-hie" > /dev/null 2>&1; then
+    gen-hie > hie.yaml
+else
+    stack install implicit-hie
+    gen-hie > hie.yaml
+fi
+
+{-# START_FILE resetting #-}
+#!/bin/bash
+
+echo "export CURRENT_STACK_EXE_ENTRY=$1" > .curname
+
+{-# START_FILE ghcing #-}
+#!/bin/bash
+
+source .curname
+stack exec -- ghci app/$CURRENT_STACK_EXE_ENTRY/Main.hs
+
+{-# START_FILE checking #-}
+#!/bin/bash
+
+source .curname
+
+./building && oj t -c ./executing -d app/$CURRENT_STACK_EXE_ENTRY/test
+
+{-# START_FILE building #-}
+#!/bin/bash
+
+source .curname
+stack build {{name}}:exe:$CURRENT_STACK_EXE_ENTRY
+
+{-# START_FILE executing #-}
+#!/bin/bash
+
+source .curname
+./building && stack exec -- $CURRENT_STACK_EXE_ENTRY
+
+{-# START_FILE submitting #-}
+#!/bin/bash
+
+source .curname
+./checking && cd {{name}}/$CURRENT_STACK_EXE_ENTRY && acc s -s -- -y

@@ -1,0 +1,30 @@
+{
+	"name": "AtCoder Haskell",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"features": {
+		"ghcr.io/devcontainers/features/common-utils:2": {},
+		"ghcr.io/eitsupi/devcontainer-features/jq-likes:2": {}
+	},
+	"runArgs": ["--env-file", ".devcontainer/.env"],
+	"remoteEnv": {
+		"PATH": "/home/vscode/.local/bin:/home/vscode/.ghcup/bin:${containerEnv:PATH}"
+	},
+	"containerEnv": {
+		"BOOTSTRAP_HASKELL_NONINTERACTIVE": "1",
+		"BOOTSTRAP_HASKELL_GHC_VERSION": "9.8.4",
+		"WORKSPACE_DIR": "${containerWorkspaceFolder}"
+	},
+	"onCreateCommand": "bash .devcontainer/on-create.sh",
+	"postCreateCommand": "bash .devcontainer/post-create.sh",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"haskell.haskell",
+				"haskell.language-haskell"
+			]
+		}
+	},
+	"remoteUser": "vscode"
+}
