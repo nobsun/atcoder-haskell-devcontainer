@@ -7,6 +7,7 @@ fi
 cp $WORKSPACE_DIR/.devcontainer/stack-conf/templates/atcoder.hsfiles $HOME/.stack/templates/
 
 cp $WORKSPACE_DIR/.devcontainer/stack-conf/config.yaml $HOME/.stack/config.yaml
+echo "default-template: $HOME/.stack/templates/atcoder.hsfiles" >> $HOME/.stack/config.yaml
 
 if [ ! -d $HOME/.config/atcoder-cli-nodejs ]; then
     mkdir -p $HOME/.config/atcoder-cli-nodejs
@@ -38,3 +39,9 @@ echo $ATCODER_REVEL_SESSION | $HOME/.local/bin/aclogin
 if [ ! -d $WORKSPACE_DIR/AtCoder ]; then
     mkdir -p $WORKSPACE_DIR/AtCoder
 fi
+
+git config --global init.defaultBranch main
+git config --global user.name $GIT_USER_NAME
+git config --global user.email $GIT_USER_EMAIL
+
+mv $WORKSPACE_DIR/.git $WORKSPACE_DIR/.git.save
