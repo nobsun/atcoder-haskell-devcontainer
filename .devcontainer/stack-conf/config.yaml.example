@@ -1,10 +1,13 @@
 templates:
+  scm-init: git
   params:
     author-name: 'Your Name'           # replace with your name
     author-email: 'your email address' # replace with your email
     category: AtCoder
     copyright: 'Year Your name'        # replace with this year and your name
+    # github-username: 'Your github username'
 
 allow-newer: true
 
 notify-if-nix-on-path: false
+

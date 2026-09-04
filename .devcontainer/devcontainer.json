@@ -9,7 +9,7 @@
 	},
 	"runArgs": ["--env-file", ".devcontainer/.env"],
 	"remoteEnv": {
-		"PATH": "/home/vscode/.local/bin:/home/vscode/.ghcup/bin:${containerEnv:PATH}"
+		"PATH": "/home/${localEnv:USER}/.local/bin:/home/${localEnv:USER}/.ghcup/bin:${containerEnv:PATH}"
 	},
 	"containerEnv": {
 		"BOOTSTRAP_HASKELL_NONINTERACTIVE": "1",
@@ -26,5 +26,5 @@
 			]
 		}
 	},
-	"remoteUser": "vscode"
+	"remoteUser": "${localEnv:USER}"
 }
